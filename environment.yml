@@ -1,0 +1,28 @@
+# environment.yml — raíz del proyecto
+name: andeslink-churn
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - jupyterlab
+  - pandas
+  - numpy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - pyyaml
+  - pip:
+      - dvc
+      - mlflow
+      - fastapi
+      - uvicorn[standard]
+      - streamlit
+      - pydantic
+      - joblib
+      - python-dotenv
+      - pytest
+      - httpx
+      - evidently
+      - prometheus-fastapi-instrumentator

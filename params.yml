@@ -1,0 +1,12 @@
+# params.yaml — raíz del proyecto
+prepare:
+  test_size: 0.2
+  random_state: 42
+  target_column: Churn
+
+train:
+  model_type: random_forest
+  n_estimators: 100
+  max_depth: 10
+  class_weight: balanced
+  random_state: 42
