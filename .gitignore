@@ -9,8 +9,12 @@ venv/
 env/
  
 # Datos — se versionan con DVC
-data/raw/
-data/processed/
+data/raw/*
+!data/raw/*.dvc
+!data/raw/.gitignore
+data/processed/*
+!data/processed/*.dvc
+!data/processed/.gitignore
  
 # Modelos — se versionan con DVC o MLflow
 models/*.pkl
