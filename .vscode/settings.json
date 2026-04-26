@@ -1,0 +1,13 @@
+{
+  "python.defaultInterpreterPath": "${env:CONDA_PREFIX}/python",
+  "python.terminal.activateEnvironment": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "python.linting.enabled": true,
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  }
+}

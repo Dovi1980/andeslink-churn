@@ -1,5 +1,5 @@
 # .gitignore — raíz del proyecto
- 
+
 # Entorno Python
 __pycache__/
 *.pyc
@@ -7,7 +7,7 @@ __pycache__/
 .env
 venv/
 env/
- 
+
 # Datos — se versionan con DVC
 data/raw/*
 !data/raw/*.dvc
@@ -15,31 +15,32 @@ data/raw/*
 data/processed/*
 !data/processed/*.dvc
 !data/processed/.gitignore
- 
+
 # Modelos — se versionan con DVC o MLflow
 models/*.pkl
 models/*.joblib
- 
+
 # MLflow
 mlruns/
- 
+
 # DVC cache local
 .dvc/cache/
 .dvc/tmp/
- 
+
 # JupyterLab
 .ipynb_checkpoints/
- 
+
 # VSCode
-.vscode/
- 
+.vscode/*
+!.vscode/settings.json
+
 # Docker
 .docker/
- 
+
 # Sistema operativo
 .DS_Store
 Thumbs.db
- 
+
 # Reportes generados
 reports/figures/*.png
 reports/figures/*.svg
