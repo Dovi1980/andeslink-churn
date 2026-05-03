@@ -183,7 +183,8 @@ andeslink-churn/
 │   └── model.pkl                   # Pipeline completo: preprocesador + modelo
 │
 ├── notebooks/
-│   └── 01_eda.ipynb                # Análisis exploratorio de datos
+│   └── 01_analisis_exploratorio.ipynb      # EDA inicial
+│   └── 02_train_test_mlflow.ipynb          # Entrenamiento y evaluación
 │
 ├── src/
 │   ├── __init__.py
