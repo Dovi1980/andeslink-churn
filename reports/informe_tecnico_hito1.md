@@ -18,9 +18,9 @@ Se seleccionó **Recall** como métrica principal.
 *Razón:* Para AndesLink es preferible contactar a un cliente que no se iba a ir (Falso Positivo) que perder a un cliente real por no detectarlo (Falso Negativo).
 
 ## 5. Resultados del Modelo Ganador
-El modelo **Random Forest** mostró la mejor estabilidad en validación cruzada.
-- **Recall:** 0.85+ (aprox)
-- **Artefacto:** Serializado como `models/model.pkl` incluyendo el preprocesador.
+El modelo **Random Forest** mostró la mejor estabilidad y capacidad de detección.
+- **Recall:** ~75% - 78% (en validación y prueba)
+- **Artefacto:** Serializado como `models/churn_model.pkl` incluyendo el preprocesador.
 
 ## 6. Reproducibilidad
 El flujo está automatizado mediante **DVC** y los experimentos trazados en **MLflow**, cumpliendo con los estándares de MLOps requeridos.
