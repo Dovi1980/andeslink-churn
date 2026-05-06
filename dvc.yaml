@@ -1,0 +1,26 @@
+stages:
+  prepare:
+    cmd: python src/data/prepare.py
+    deps:
+      - data/raw/churn_sintetico.csv
+      - src/data/prepare.py
+    params:
+      - prepare.target_column
+      - prepare.test_size
+      - prepare.random_state
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  train:
+    cmd: python src/models/train.py
+    deps:
+      - data/processed/train.csv
+      - data/processed/test.csv
+      - src/models/train.py
+      - src/features/build_features.py
+    params:
+      - train.n_estimators
+      - train.max_depth
+    outs:
+      - models/model.pkl

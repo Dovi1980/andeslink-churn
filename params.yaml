@@ -1,0 +1,13 @@
+prepare:
+  target_column: churn
+  test_size: 0.2
+  random_state: 42
+
+train:
+  n_estimators: 50
+  max_depth: 5
+  class_weight: balanced
+  random_state: 42
+
+metrics:
+  main_metric: recall
