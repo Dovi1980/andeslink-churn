@@ -1,0 +1,55 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m src.data.prepare
+    deps:
+    - path: data/raw/churn_sintetico.csv
+      hash: md5
+      md5: b8541379ed614873c48ec17bded142ac
+      size: 342760
+    - path: src/data/prepare.py
+      hash: md5
+      md5: c4374d7dc050e43cf6b973ce9c8df9a2
+      size: 1123
+    params:
+      params.yaml:
+        prepare.random_state: 42
+        prepare.target_column: churn
+        prepare.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 72f9b52b689988f5e0138a81eca7983f
+      size: 61997
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 908500a5762c4244326eaf70d8b0ce6f
+      size: 247751
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 72f9b52b689988f5e0138a81eca7983f
+      size: 61997
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 908500a5762c4244326eaf70d8b0ce6f
+      size: 247751
+    - path: src/features/build_features.py
+      hash: md5
+      md5: 6941f94c999af797aa023054d469a696
+      size: 682
+    - path: src/models/train.py
+      hash: md5
+      md5: d487555eaf278f3768187ad8102f2c10
+      size: 2423
+    params:
+      params.yaml:
+        train.max_depth: 5
+        train.n_estimators: 50
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 62ef2bf3d2ad89d8df4ab0870a462a3a
+      size: 265259
