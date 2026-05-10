@@ -7,6 +7,8 @@ dependencies:
   - python=3.11
   - pip
   - jupyterlab
+  - jupyter
+  - ipywidgets
   - pandas
   - numpy
   - scikit-learn
@@ -17,6 +19,7 @@ dependencies:
   - pip:
       - dvc
       - mlflow
+      - scikit-learn-extra
       - fastapi
       - uvicorn[standard]
       - streamlit
