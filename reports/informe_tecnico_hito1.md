@@ -26,7 +26,7 @@ _Razón:_ Para AndesLink es preferible contactar a un cliente que no se iba a ir
 El modelo **Random Forest** mostró la mejor estabilidad y capacidad de detección.
 
 - **Recall:** ~75% - 78% (en validación y prueba)
-- **Artefacto:** Serializado como `models/churn_model.pkl` incluyendo el preprocesador.
+- **Artefacto:** Serializado como `models/model.pkl` incluyendo el preprocesador.
 
 ## 6. Reproducibilidad
 
