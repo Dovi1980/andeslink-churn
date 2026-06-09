@@ -195,7 +195,7 @@ graph LR
     GUI -->|HTTP POST| API[Servicio API - FastAPI]
     API -->|Carga local| Model[models/model.pkl]
     
-    subgraph Red Interna Docker (docker-compose)
+    subgraph "Red Interna Docker (docker-compose)"
         GUI
         API
     end
