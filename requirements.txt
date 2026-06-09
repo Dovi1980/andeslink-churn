@@ -1,0 +1,14 @@
+pandas
+numpy
+scikit-learn==1.8.0
+pyyaml
+fastapi
+uvicorn[standard]
+streamlit
+pydantic
+joblib
+python-dotenv
+pytest
+httpx
+evidently
+prometheus-fastapi-instrumentator

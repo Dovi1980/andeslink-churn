@@ -44,3 +44,6 @@ Thumbs.db
 # Reportes generados
 reports/figures/*.png
 reports/figures/*.svg
+
+# Antigravity CLI
+.antigravitycli/

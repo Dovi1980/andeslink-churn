@@ -172,9 +172,65 @@ mlflow ui
 
 ## Próximos Pasos (Hitos 2 y 3)
 
-- [ ] **Despliegue:** Creación de API REST con FastAPI y contenedorización con Docker.
-- [ ] **Interfaz:** Desarrollo de una GUI en Streamlit para consumo del modelo.
-- [ ] **Monitoreo:** Implementación de Prometheus, Grafana y monitoreo de Data Drift con Evidently.
+- [x] **Despliegue (Hito 2):** Creación de API REST con FastAPI y contenedorización con Docker.
+- [x] **Interfaz (Hito 2):** Desarrollo de una GUI en Streamlit para consumo del modelo.
+- [ ] **Monitoreo (Hito 3):** Implementación de Prometheus, Grafana y monitoreo de Data Drift con Evidently.
+
+---
+
+## Hito 2 — Guía de Operación y Despliegue
+
+Esta sección detalla cómo levantar y verificar toda la infraestructura del Hito 2 (API de inferencia + Interfaz Gráfica).
+
+### Requisitos del Sistema
+* **Docker Desktop** (con soporte para Linux Containers y Compose v2 instalado y ejecutándose).
+* **Python 3.11** (en caso de querer ejecutar pruebas locales fuera del contenedor).
+
+### Arquitectura de la Solución Local
+El siguiente diagrama detalla la interacción entre servicios de la red de Docker:
+
+```mermaid
+graph LR
+    Usuario([Usuario / Navegador]) -->|HTTP :8501| GUI[Servicio GUI - Streamlit]
+    GUI -->|HTTP POST| API[Servicio API - FastAPI]
+    API -->|Carga local| Model[models/model.pkl]
+    
+    subgraph Red Interna Docker (docker-compose)
+        GUI
+        API
+    end
+```
+
+### 1. Iniciar la Solución (Docker Compose)
+Para levantar ambos servicios en segundo plano con un único comando:
+
+```bash
+docker compose up --build -d
+```
+
+Este comando:
+1. Construye las imágenes basadas en [Dockerfile](file:///C:/andeslink-churn/Dockerfile) (API) y [Dockerfile.frontend](file:///C:/andeslink-churn/Dockerfile.frontend) (GUI).
+2. Orquesta las dependencias mediante [docker-compose.yml](file:///C:/andeslink-churn/docker-compose.yml), esperando a que la API esté saludable (`healthcheck`) para levantar la GUI.
+3. Monta la carpeta de modelos local `./models` en modo lectura (`ro`) dentro del contenedor.
+
+### 2. URLs de Acceso
+Una vez levantado el entorno:
+* **Interfaz de Usuario (Streamlit):** [http://localhost:8501](http://localhost:8501)
+* **Documentación Interactiva de la API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+* **Endpoint de Salud de la API:** [http://localhost:8000/health](http://localhost:8000/health)
+
+### 3. Ejecución de Pruebas Unitarias e Integración
+Puedes correr la suite de pruebas localmente para verificar el correcto funcionamiento (incluyendo mocks del modelo para CI/CD):
+
+```bash
+pytest tests/ -v
+```
+
+Para correr las pruebas dentro del contenedor de la API una vez levantado:
+
+```bash
+docker compose exec api pytest tests/ -v
+```
 
 ---
 
@@ -184,3 +240,4 @@ mlflow ui
 - Lopez, Maria
 - Riveros, David
 - Vdovichenko, Walter
+
