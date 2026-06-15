@@ -1,5 +1,6 @@
 import logging
 import time
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 import pandas as pd
@@ -11,20 +12,22 @@ from src.api import model_loader
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("andeslink_api")
 
-app = FastAPI(
-    title="AndesLink Churn Prediction API",
-    description="API REST para predecir la probabilidad de abandono (churn) de clientes de AndesLink.",
-    version="1.0.0"
-)
-
-@app.on_event("startup")
-def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """Carga el modelo al iniciar el servidor para optimizar tiempos de respuesta."""
     try:
         model_loader.get_model()
         logger.info("Modelo cargado correctamente en startup.")
     except Exception as e:
         logger.critical(f"Error crítico al cargar el modelo durante el inicio: {e}")
+    yield
+
+app = FastAPI(
+    title="AndesLink Churn Prediction API",
+    description="API REST para predecir la probabilidad de abandono (churn) de clientes de AndesLink.",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 @app.get("/", include_in_schema=False)
 def index():

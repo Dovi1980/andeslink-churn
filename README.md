@@ -220,14 +220,19 @@ Una vez levantado el entorno:
 * **Endpoint de Salud de la API:** [http://localhost:8000/health](http://localhost:8000/health)
 
 ### 3. Ejecución de Pruebas Unitarias e Integración
-Puedes correr la suite de pruebas localmente para verificar el correcto funcionamiento (incluyendo mocks del modelo para CI/CD):
+Puedes correr la suite de pruebas localmente para verificar el correcto funcionamiento (incluyendo mocks del modelo para CI/CD).
 
+**Ejecución estándar:**
 ```bash
 pytest tests/ -v
 ```
 
-Para correr las pruebas dentro del contenedor de la API una vez levantado:
+**Ejecución en Windows / Entornos Conda (para asegurar la carga de DLLs):**
+```bash
+conda run -n andeslink-churn pytest tests/ -v
+```
 
+Para correr las pruebas dentro del contenedor de la API una vez levantado:
 ```bash
 docker compose exec api pytest tests/ -v
 ```
