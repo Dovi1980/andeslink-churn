@@ -8,17 +8,30 @@
 
 ## Tabla de contenidos
 
-- [Contexto de negocio](#contexto-de-negocio)
-- [Objetivo analítico](#objetivo-analítico)
-- [Arquitectura (Hito 1)](#arquitectura-hito-1)
-- [Dataset](#dataset)
-- [Stack tecnológico](#stack-tecnológico)
-- [Estructura del repositorio](#estructura-del-repositorio)
-- [Instalación y configuración](#instalación-y-configuración)
-- [Ejecución del pipeline](#ejecución-del-pipeline)
-- [Métricas del modelo](#métricas-del-modelo)
-- [Próximos Pasos (Hitos 2 y 3)](#próximos-pasos-hitos-2-y-3)
-- [Equipo](#equipo)
+- [AndesLink Churn Prediction — MLOps Local](#andeslink-churn-prediction--mlops-local)
+  - [Tabla de contenidos](#tabla-de-contenidos)
+  - [Contexto de negocio](#contexto-de-negocio)
+  - [Objetivo analítico](#objetivo-analítico)
+  - [Arquitectura (Hito 1)](#arquitectura-hito-1)
+    - [Flujo de datos Hito 1](#flujo-de-datos-hito-1)
+  - [Dataset](#dataset)
+  - [Stack tecnológico](#stack-tecnológico)
+  - [Estructura del repositorio](#estructura-del-repositorio)
+  - [Instalación y configuración](#instalación-y-configuración)
+    - [1. Clonar el repositorio](#1-clonar-el-repositorio)
+    - [2. Entorno conda](#2-entorno-conda)
+    - [3. Recuperar datos](#3-recuperar-datos)
+  - [Ejecución del pipeline](#ejecución-del-pipeline)
+    - [Ver experimentos](#ver-experimentos)
+  - [Métricas del modelo](#métricas-del-modelo)
+  - [Hito 2 — Guía de Operación y Despliegue](#hito-2--guía-de-operación-y-despliegue)
+    - [Requisitos del Sistema](#requisitos-del-sistema)
+    - [Arquitectura de la Solución Local](#arquitectura-de-la-solución-local)
+    - [1. Iniciar la Solución (Docker Compose)](#1-iniciar-la-solución-docker-compose)
+    - [2. URLs de Acceso](#2-urls-de-acceso)
+    - [3. Ejecución de Pruebas Unitarias e Integración](#3-ejecución-de-pruebas-unitarias-e-integración)
+  - [Próximos Pasos (Hitos 3)](#próximos-pasos-hitos-3)
+  - [Equipo](#equipo)
 
 ---
 
@@ -34,6 +47,8 @@ Construir un modelo de Machine Learning capaz de estimar la **probabilidad de ch
 
 - **Variable objetivo:** `churn` (1 = cancela, 0 = permanece)
 - **Métrica primaria:** **Recall** (Minimizar los falsos negativos para capturar la mayor cantidad de fugas posibles).
+
+---
 
 ---
 
@@ -58,27 +73,27 @@ src/models/train.py  ──► models/model.pkl (Pipeline completo)
 
 ## Dataset
 
-| Atributo          | Detalle                                               |
-| ----------------- | ----------------------------------------------------- |
-| **Nombre**        | `churn_sintetico.csv`                                 |
-| **Filas**         | 5.000 registros                                       |
-| **Columnas**      | 16 variables + 1 target                               |
-| **Distribución**  | 66% no-churn · 34% churn                              |
+| Atributo          | Detalle                                                |
+| ----------------- | ------------------------------------------------------ |
+| **Nombre**        | `churn_sintetico.csv`                                  |
+| **Filas**         | 5.000 registros                                        |
+| **Columnas**      | 16 variables + 1 target                                |
+| **Distribución**  | 66% no-churn · 34% churn                               |
 | **Observaciones** | Se eliminó `total_charges` por alta multicolinealidad. |
 
 ---
 
 ## Stack tecnológico
 
-| Capa                  | Herramienta        | Uso                                    |
-| --------------------- | ------------------ | -------------------------------------- |
-| Lenguaje              | Python 3.11        | Base del proyecto                      |
-| Entorno               | conda              | Gestión de dependencias                |
-| Exploración           | JupyterLab         | EDA y análisis inicial                 |
-| Procesamiento         | pandas · sklearn   | Transformación de datos                |
-| Tracking experimentos | MLflow             | Registro de métricas y modelos         |
-| Versionado datos      | DVC                | Orquestación del pipeline              |
-| Serialización         | joblib             | Guardado del modelo final              |
+| Capa                  | Herramienta      | Uso                            |
+| --------------------- | ---------------- | ------------------------------ |
+| Lenguaje              | Python 3.11      | Base del proyecto              |
+| Entorno               | conda            | Gestión de dependencias        |
+| Exploración           | JupyterLab       | EDA y análisis inicial         |
+| Procesamiento         | pandas · sklearn | Transformación de datos        |
+| Tracking experimentos | MLflow           | Registro de métricas y modelos |
+| Versionado datos      | DVC              | Orquestación del pipeline      |
+| Serialización         | joblib           | Guardado del modelo final      |
 
 ---
 
@@ -121,18 +136,21 @@ andeslink-churn/
 ## Instalación y configuración
 
 ### 1. Clonar el repositorio
+
 ```bash
 git clone https://github.com/Dovi1980/andeslink-churn.git
 cd andeslink-churn
 ```
 
 ### 2. Entorno conda
+
 ```bash
 conda env create -f environment.yml
 conda activate andeslink-churn
 ```
 
 ### 3. Recuperar datos
+
 ```bash
 dvc pull
 # O en su defecto, colocar churn_sintetico.csv en data/raw/
@@ -149,10 +167,12 @@ dvc repro
 ```
 
 Esto ejecutará secuencialmente:
+
 1. **prepare**: Limpieza de datos y split estratificado.
 2. **train**: Entrenamiento del RandomForest, registro en MLflow y exportación del modelo.
 
 ### Ver experimentos
+
 ```bash
 mlflow ui
 # Abrir: http://localhost:5000
@@ -162,19 +182,13 @@ mlflow ui
 
 ## Métricas del modelo
 
-| Métrica   | Objetivo | Justificación                                          |
-| --------- | -------- | ------------------------------------------------------ |
-| **Recall**| **Max**  | Evitar perder clientes reales (Falsos Negativos).      |
-| Precision | Medir    | Controlar el costo de campañas de retención.          |
-| ROC-AUC   | Medir    | Evaluar la capacidad de discriminación del modelo.     |
+| Métrica    | Objetivo | Justificación                                      |
+| ---------- | -------- | -------------------------------------------------- |
+| **Recall** | **Max**  | Evitar perder clientes reales (Falsos Negativos).  |
+| Precision  | Medir    | Controlar el costo de campañas de retención.       |
+| ROC-AUC    | Medir    | Evaluar la capacidad de discriminación del modelo. |
 
 ---
-
-## Próximos Pasos (Hitos 2 y 3)
-
-- [x] **Despliegue (Hito 2):** Creación de API REST con FastAPI y contenedorización con Docker.
-- [x] **Interfaz (Hito 2):** Desarrollo de una GUI en Streamlit para consumo del modelo.
-- [ ] **Monitoreo (Hito 3):** Implementación de Prometheus, Grafana y monitoreo de Data Drift con Evidently.
 
 ---
 
@@ -183,10 +197,12 @@ mlflow ui
 Esta sección detalla cómo levantar y verificar toda la infraestructura del Hito 2 (API de inferencia + Interfaz Gráfica).
 
 ### Requisitos del Sistema
-* **Docker Desktop** (con soporte para Linux Containers y Compose v2 instalado y ejecutándose).
-* **Python 3.11** (en caso de querer ejecutar pruebas locales fuera del contenedor).
+
+- **Docker Desktop** (con soporte para Linux Containers y Compose v2 instalado y ejecutándose).
+- **Python 3.11** (en caso de querer ejecutar pruebas locales fuera del contenedor).
 
 ### Arquitectura de la Solución Local
+
 El siguiente diagrama detalla la interacción entre servicios de la red de Docker:
 
 ```mermaid
@@ -194,7 +210,7 @@ graph LR
     Usuario([Usuario / Navegador]) -->|HTTP :8501| GUI[Servicio GUI - Streamlit]
     GUI -->|HTTP POST| API[Servicio API - FastAPI]
     API -->|Carga local| Model[models/model.pkl]
-    
+
     subgraph "Red Interna Docker (docker-compose)"
         GUI
         API
@@ -202,6 +218,7 @@ graph LR
 ```
 
 ### 1. Iniciar la Solución (Docker Compose)
+
 Para levantar ambos servicios en segundo plano con un único comando:
 
 ```bash
@@ -209,33 +226,48 @@ docker compose up --build -d
 ```
 
 Este comando:
+
 1. Construye las imágenes basadas en [Dockerfile](file:///C:/andeslink-churn/Dockerfile) (API) y [Dockerfile.frontend](file:///C:/andeslink-churn/Dockerfile.frontend) (GUI).
 2. Orquesta las dependencias mediante [docker-compose.yml](file:///C:/andeslink-churn/docker-compose.yml), esperando a que la API esté saludable (`healthcheck`) para levantar la GUI.
 3. Monta la carpeta de modelos local `./models` en modo lectura (`ro`) dentro del contenedor.
 
 ### 2. URLs de Acceso
+
 Una vez levantado el entorno:
-* **Interfaz de Usuario (Streamlit):** [http://localhost:8501](http://localhost:8501)
-* **Documentación Interactiva de la API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
-* **Endpoint de Salud de la API:** [http://localhost:8000/health](http://localhost:8000/health)
+
+- **Interfaz de Usuario (Streamlit):** [http://localhost:8501](http://localhost:8501)
+- **Documentación Interactiva de la API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Endpoint de Salud de la API:** [http://localhost:8000/health](http://localhost:8000/health)
 
 ### 3. Ejecución de Pruebas Unitarias e Integración
+
 Puedes correr la suite de pruebas localmente para verificar el correcto funcionamiento (incluyendo mocks del modelo para CI/CD).
 
 **Ejecución estándar:**
+
 ```bash
 pytest tests/ -v
 ```
 
 **Ejecución en Windows / Entornos Conda (para asegurar la carga de DLLs):**
+
 ```bash
 conda run -n andeslink-churn pytest tests/ -v
 ```
 
 Para correr las pruebas dentro del contenedor de la API una vez levantado:
+
 ```bash
 docker compose exec api pytest tests/ -v
 ```
+
+---
+
+---
+
+## Próximos Pasos (Hitos 3)
+
+- [ ] **Monitoreo (Hito 3):** Implementación de Prometheus, Grafana y monitoreo de Data Drift con Evidently.
 
 ---
 
@@ -245,4 +277,3 @@ docker compose exec api pytest tests/ -v
 - Lopez, Maria
 - Riveros, David
 - Vdovichenko, Walter
-
